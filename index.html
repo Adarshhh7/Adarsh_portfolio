@@ -1,23 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adarsh Portfolio | Jönköping University</title>
+    <title>Anavena Adarsh | AI Engineering</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00ffaa;
-            --secondary: #1a1a2e;
+            --secondary: #0a0a1a;
             --accent: #16213e;
+            --highlight: #3a86ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Exo 2', sans-serif;
             background: var(--secondary);
             color: #fff;
+            overflow-x: hidden;
         }
 
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Neural Interface Header */
         .neural-lace {
             position: fixed;
             top: 0;
@@ -26,6 +41,7 @@
             height: 4px;
             background: linear-gradient(90deg, var(--primary), transparent 50%, var(--primary));
             animation: pulse 4s infinite;
+            z-index: 1000;
         }
 
         @keyframes pulse {
@@ -34,19 +50,45 @@
             100% { opacity: 0.2 }
         }
 
+        /* 3D Canvas */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Hero Section */
         .hero {
             height: 100vh;
-            display: grid;
-            place-items: center;
-            background: radial-gradient(circle at 50% 50%, var(--accent), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
             text-align: center;
+            padding: 2rem;
         }
 
         .hologram {
-            font-size: 2.5em;
+            font-size: 4.5em;
             color: var(--primary);
-            text-shadow: 0 0 10px var(--primary);
+            text-shadow: 0 0 15px var(--primary), 0 0 25px var(--primary);
             animation: float 6s ease-in-out infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        .subheadline {
+            font-size: 1.5em;
+            color: rgba(0, 255, 170, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .highlight {
+            color: var(--highlight);
+            font-weight: 700;
         }
 
         @keyframes float {
@@ -55,66 +97,489 @@
             100% { transform: translateY(0px) }
         }
 
-        .card {
-            background: rgba(0, 255, 170, 0.1);
+        /* Code Snippet in Hero */
+        .code-snippet {
+            background: rgba(0, 0, 0, 0.7);
             border: 1px solid var(--primary);
             padding: 1.5rem;
             border-radius: 10px;
-            margin: 1.5rem;
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-snippet::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--highlight));
+        }
+
+        .code-line {
+            margin: 0.5rem 0;
+            color: #ddd;
+        }
+
+        .keyword {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .string {
+            color: #a5d6ff;
+        }
+
+        /* Project Cards with 3D Effect */
+        .project-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 10;
+            background: rgba(10, 10, 26, 0.8);
+        }
+
+        .project-card {
+            background: rgba(0, 255, 170, 0.1);
+            border: 1px solid var(--primary);
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 350px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 10px 20px rgba(0, 255, 170, 0.3);
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .project-title {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .tech-tag {
+            background: rgba(0, 255, 170, 0.2);
+            border: 1px solid var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
+        /* Skills Section */
+        .skills-container {
+            padding: 4rem 2rem;
+            background: rgba(16, 24, 48, 0.5);
+            position: relative;
+        }
+
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .skill-card {
+            background: rgba(0, 255, 170, 0.05);
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .skill-card:hover {
+            background: rgba(0, 255, 170, 0.1);
+            transform: scale(1.05);
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        /* AI Chat Button */
+        .ai-chat {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: var(--secondary);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.5);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .ai-chat:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 170, 0.7);
+        }
+
+        /* Connect Section */
+        .connect {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: rgba(10, 10, 26, 0.8);
         }
 
         .neuro-button {
             background: transparent;
             color: var(--primary);
             border: 2px solid var(--primary);
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 2rem;
+            margin: 0.5rem;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
-            margin-top: 1rem;
+            font-family: 'Orbitron', sans-serif;
         }
 
         .neuro-button:hover {
             background: var(--primary);
             color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        /* Make text readable on mobile */
+        @media (max-width: 768px) {
+            .hologram { font-size: 2.5em; }
+            .project-card { width: 100%; }
+            .subheadline { font-size: 1.2em; }
+        }
+
+        /* Python Code Section */
+        .python-code {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 2rem auto;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .python-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--highlight));
+        }
+
+        .python-line {
+            color: #ddd;
+            margin: 0.3rem 0;
+        }
+
+        .python-keyword {
+            color: #ff79c6;
+        }
+
+        .python-function {
+            color: var(--primary);
+        }
+
+        .python-string {
+            color: #f1fa8c;
+        }
+
+        .python-comment {
+            color: #6272a4;
         }
     </style>
 </head>
 <body>
     <div class="neural-lace"></div>
+    <div id="canvas-container"></div>
     
     <section class="hero">
-        <div class="hologram">
-            <h1>Anavena Adarsh</h1>
-            <p>AI Engineering Student @ Jönköping University</p>
-            <p style="font-size: 0.5em">2025-2027</p>
+        <div class="hologram orbitron">
+            <h1>AI ENGINEERING</h1>
+            <p class="subheadline">
+                Anavena Adarsh<br>
+                <span class="highlight">Jönköping University</span> | <span class="highlight">2025-2027</span>
+            </p>
+        </div>
+        
+        <div class="code-snippet">
+            <div class="code-line"><span class="keyword">class</span> <span class="string">AI_Engineer:</span></div>
+            <div class="code-line">&nbsp;&nbsp;<span class="keyword">def</span> <span class="function">__init__(self):</span></div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">self.name</span> = <span class="string">"Anavena Adarsh"</span></div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">self.university</span> = <span class="string">"Jönköping University"</span></div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">self.focus</span> = <span class="string">"Human-AI Interaction & Neurotechnology"</span></div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">self.skills</span> = [<span class="string">"Python"</span>, <span class="string">"Machine Learning"</span>, <span class="string">"Neural Networks"</span>]</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">self.status</span> = <span class="string">"Building the future of AI"</span></div>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row items-center gap-6 justify-center">
+            <div class="flex justify-center gap-4">
+                <a href="https://www.linkedin.com/in/adarsh-anavena-bb3006214" target="_blank" rel="noopener noreferrer" class="glass-hover p-3 rounded-xl group" tabindex="0">
+                    <i class="fab fa-linkedin text-blue-400 text-2xl"></i>
+                </a>
+                <a href="https://github.com/Adarshhh7" target="_blank" rel="noopener noreferrer" class="glass-hover p-3 rounded-xl group" tabindex="0">
+                    <i class="fab fa-github text-white text-2xl"></i>
+                </a>
+                <a href="https://discordapp.com/users/1267235819924492410" target="_blank" rel="noopener noreferrer" class="glass-hover p-3 rounded-xl group" tabindex="0">
+                    <i class="fab fa-discord text-purple-400 text-2xl"></i>
+                </a>
+                <a href="https://www.instagram.com/adarshhh__15/" target="_blank" rel="noopener noreferrer" class="glass-hover p-3 rounded-xl group" tabindex="0">
+                    <i class="fab fa-instagram text-pink-400 text-2xl"></i>
+                </a>
+            </div>
         </div>
     </section>
 
-    <section class="card" style="margin: 2rem">
-        <h2>Education</h2>
-        <p><b>Jönköping University</b> | AI Engineering (2025-2027)</p>
-        <p><b>B.Tech Computer Science</b> | Jain University (2024) | CGPA: 7.6</p>
+    <section class="project-container">
+        <div class="project-card">
+            <h2 class="project-title">Deep Fake Detection System</h2>
+            <p>Multi-Modal CNN with Gabor Phase Filters</p>
+            <p>• Detected deepfake images using edge detection + Gabor filters<br>
+               • Implemented CNN + Vision Transformers for image classification<br>
+               • Used ensemble learning for 98.2% detection accuracy</p>
+            <div class="tech-stack">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">TensorFlow</span>
+                <span class="tech-tag">CNN</span>
+                <span class="tech-tag">Gabor Filters</span>
+            </div>
+            <a href="https://github.com/Adarshhh7/deepfake-detection" class="neuro-button">View Code</a>
+        </div>
+
+        <div class="project-card">
+            <h2 class="project-title">Personal Hygiene System</h2>
+            <p>IoT-Enabled Personal Wellness Platform</p>
+            <p>• Integrated IoT sensors for real-time hygiene monitoring<br>
+               • Developed system to track and optimize cleaning schedules<br>
+               • Designed user-friendly interface for maintenance tracking</p>
+            <div class="tech-stack">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">IoT</span>
+                <span class="tech-tag">AWS</span>
+                <span class="tech-tag">MySQL</span>
+            </div>
+            <a href="https://github.com/Adarshhh7/smart-hygiene" class="neuro-button">View Code</a>
+        </div>
+
+        <div class="project-card">
+            <h2 class="project-title">AI Engineering Portfolio</h2>
+            <p>Interactive Web Platform with 3D Elements</p>
+            <p>• Created responsive portfolio using HTML, CSS, and JavaScript<br>
+               • Implemented Three.js for 3D visualizations<br>
+               • Added interactive elements for user engagement</p>
+            <div class="tech-stack">
+                <span class="tech-tag">HTML/CSS</span>
+                <span class="tech-tag">JavaScript</span>
+                <span class="tech-tag">Three.js</span>
+                <span class="tech-tag">GitHub Pages</span>
+            </div>
+            <a href="#" class="neuro-button">View Code</a>
+        </div>
     </section>
 
-    <section class="card">
-        <h2>Skills</h2>
-        <p>Python | Machine Learning | AI Systems | IoT | Git</p>
-        <p>HTML/CSS/JavaScript | MySQL | AWS Basics</p>
+    <section class="skills-container">
+        <div class="skill-grid">
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Programming</h3>
+                <p>Python | JavaScript | HTML/CSS</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI/ML</h3>
+                <p>Machine Learning | Neural Networks | CNN</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>Tools</h3>
+                <p>Git | VS Code | MySQL | AWS</p>
+            </div>
+            <div class="skill-card">
+                <div class="skill-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <h3>IoT</h3>
+                <p>Sensor Integration | Data Analysis | System Design</p>
+            </div>
+        </div>
     </section>
 
-    <section class="card">
-        <h2>Certifications</h2>
-        <p>• AI Certification (Acmegrade)</p>
-        <p>• ML Certification (Verzeo)</p>
-        <p>• Problem Solving (HackerRank)</p>
-    </section>
-
-    <section style="text-align: center; margin: 2rem">
-        <h2>Connect</h2>
+    <section class="connect">
+        <h2>Connect with Me</h2>
         <a href="https://www.linkedin.com/in/adarsh-anavena-bb3006214" class="neuro-button">LinkedIn</a>
         <a href="https://github.com/Adarshhh7" class="neuro-button">GitHub</a>
+        <a href="https://discordapp.com/users/1267235819924492410" class="neuro-button">Discord</a>
+        <a href="https://www.instagram.com/adarshhh__15/" class="neuro-button">Instagram</a>
     </section>
+
+    <button class="ai-chat" id="chat-button">Chat with AI Assistant</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // 3D Setup
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Create AI-themed 3D elements
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+            // Main title
+            const textGeometry = new THREE.TextGeometry('AI ENGINEERING', {
+                font: font,
+                size: 1,
+                height: 0.2,
+            });
+            
+            const textMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x00ffaa,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            textMesh.position.set(-5, 0, -5);
+            scene.add(textMesh);
+            
+            // Neural network nodes
+            createNeuralNetwork();
+        });
+
+        // Create neural network visualization
+        function createNeuralNetwork() {
+            // Create particles for neural network visualization
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 1000;
+            
+            const posArray = new Float32Array(particlesCount * 3);
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 5;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.02,
+                color: 0x00ffaa
+            });
+            
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            
+            // Connect some points to form neural network connections
+            const linesMaterial = new THREE.LineBasicMaterial({ color: 0x00ffaa, transparent: true, opacity: 0.3 });
+            
+            // Create several neural connections
+            for (let i = 0; i < 50; i++) {
+                const points = [];
+                const startIndex = Math.floor(Math.random() * particlesCount) * 3;
+                points.push(new THREE.Vector3(
+                    particlesGeometry.attributes.position.array[startIndex],
+                    particlesGeometry.attributes.position.array[startIndex + 1],
+                    particlesGeometry.attributes.position.array[startIndex + 2]
+                ));
+                
+                const endIndex = Math.floor(Math.random() * particlesCount) * 3;
+                points.push(new THREE.Vector3(
+                    particlesGeometry.attributes.position.array[endIndex],
+                    particlesGeometry.attributes.position.array[endIndex + 1],
+                    particlesGeometry.attributes.position.array[endIndex + 2]
+                ));
+                
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+                const line = new THREE.Line(lineGeometry, linesMaterial);
+                scene.add(line);
+            }
+        }
+
+        camera.position.z = 5;
+
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotate particles
+            scene.children.forEach(child => {
+                if (child instanceof THREE.Points || child instanceof THREE.Line) {
+                    child.rotation.x += 0.001;
+                    child.rotation.y += 0.001;
+                }
+            });
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // AI Chat Button
+        document.getElementById('chat-button').addEventListener('click', function() {
+            alert("AI Assistant: Hello! I'm your virtual portfolio assistant. Ask me about Anavena's projects or skills!");
+            // In a real implementation, you would integrate a chat API here
+        });
+    </script>
 </body>
 </html>
